@@ -30,9 +30,10 @@ client.autoCommit = true;
 /* Setup Express */
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
-app.set('view engine', 'hjs');
+app.set('view engine', 'mustache');
+app.engine('mustache', require('hogan-middleware').__express);
 app.use(express.favicon());
-app.use(express.logger('dev'));
+/*app.use(express.logger('dev')); */
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
@@ -44,7 +45,7 @@ if ('development' == app.get('env')) {
 }
 
 // Access Routes
-require('./routes/sfcanvas')(app);
+require('./routes/sfcanvas')(app, process.env.SFDC_SECRET);
 		
 // Solr WebServices
 require('./routes/products')(app, client);

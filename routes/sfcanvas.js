@@ -1,4 +1,4 @@
-module.exports = function (app) {
+module.exports = function (app, secret) {
 	
 	app.get('/go', function(req, res){
 		res.render ('index');
@@ -13,7 +13,8 @@ module.exports = function (app) {
 		var   sreq = req.body.signed_request
 			, sreq_split = sreq.split('.')
 			, encodedSig = sreq_split[0]
-			, encodedEnvelope = sreq_split[1];
+			, encodedEnvelope = sreq_split[1]
+			, crypto = require('crypto');
 
 		var json_envelope = new Buffer(encodedEnvelope, 'base64').toString('utf8');
 		console.log ('json envelope : ' + json_envelope);
@@ -37,7 +38,7 @@ module.exports = function (app) {
 			throw 'Bad signed JSON Signature!';
 		}
 
-		res.render('index', {title: 'hello', signedreq : canvasRequest});
+		res.render('index', {title: 'hello', signedreq : json_envelope});
 	});
 	
 };

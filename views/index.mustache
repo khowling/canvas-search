@@ -13,15 +13,12 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular-resource.js"></script>
 
-
 	
 </head>
 
-<style>
-	  .body { font-size: 70%; }
-</style>
+
 	
-<body ng-controller="searchCtrl" style="body">
+<body ng-controller="searchCtrl" class="body">
 
 	<!-- HEADER NAV -->
 	<div class="row">
@@ -40,30 +37,24 @@
 		<!-- LEFT THIRD -->
 	    <div class="large-3 columns ">
 	      <div class="panel">
-	        <a href="#"><img src="http://placehold.it/300x240&text=[img]" /></a>
-	        <h5><a href="#">Your Name</a></h5>
-	          <div class="section-container vertical-nav" data-section data-options="deep_linking: false; one_up: true">
-	          <section class="section">
-	            <h5 class="title"><a href="#">Section 1</a></h5>
-	          </section>
-	          <section class="section">
-	            <h5 class="title"><a href="#">Section 2</a></h5>
-	          </section>
-	          <section class="section">
-	            <h5 class="title"><a href="#">Section 3</a></h5>
-	          </section>
-	          <section class="section">
-	            <h5 class="title"><a href="#">Section 4</a></h5>
-	          </section>
-	          <section class="section">
-	            <h5 class="title"><a href="#">Section 5</a></h5>
-	          </section>
-	          <section class="section">
-	            <h5 class="title"><a href="#">Section 6</a></h5>
-	          </section>
-	        </div>
-	 
+	      	<h5>Pay As you Go</h5>
+	        <a href="#"><img src="/images/sim-card.jpg" /></a>
+ 
+          <ul class="side-nav" ng-repeat="sel in selected" style="line-height:1; padding:0; margin-top: 5px;">
+		        <li><a ng-click="rmSelected($index);">{[{sel.Name}]}</a></li>
+			    </ul>
+					<button ng-click="insertSFDC()" style="width: 100%; margin-top: 5px;">Configure</button>
+
 	      </div>
+	      
+	      <div class="panel">
+	      	<h5>Contract</h5>
+	        <a href="#"><img src="/images/contract.jpg" /></a>
+ 
+
+					<button ng-click="insertSFDC()" style="width: 100%; margin-top: 5px;">Configure</button>
+
+	      </div>	      
 	    </div>
 
 	    
@@ -89,9 +80,7 @@
 
 
 			<!-- ***************** DATA RESULTS ***************-->
-			<style>
-				ul li:not(:first-child) {  margin-left: 2px;}
-			</style>
+
 			<div class="row" ng-repeat="o1 in data.res">
 		        <div class="large-2 columns small-3"><img ng-src="https://eu2.salesforce.com/sfc/servlet.shepherd/version/download/{[{o1.ThumbImageId__c}]}"></div>
 		        <div class="large-10 columns">
@@ -99,9 +88,9 @@
 		          Colour: {[{o1.Colour__c}]}, Internal Memory: {[{o1.Memory_Gb__c}]}, Operating System: {[{o1.Operating_system__c}]}, Camera MP: {[{o1.Camera__c}]}, SIM Type: {[{o1.SIM_Size__c}]} </p>
 
 		          
-		          <ul class="inline-list" style="">
-		          	<li ng-repeat="skill in o1.Available_Tariffs__c">
-		          		<span class="radius success label">{[{skill}]}</span>
+		          <ul class="inline-list" style="margin-left: 0px;">
+		          	<li ng-repeat="skill in o1.Available_Tariffs__c" style="margin: 0px 2px 2px 0px;">
+		          		<span class="radius success label" >{[{skill}]}</span>
 		          	</li>
 		          </ul>
 		          
@@ -118,7 +107,7 @@
 
 
 		<!-- ***************** RIGHT COLUMN ***************-->
-		<aside class="large-3 columns">
+		<div class="large-3 columns">
 
 
 			<div class="panel" style="margin-top: 15px;">
@@ -138,18 +127,9 @@
 				    <hr/>
 				</span>
 			</div>
-
-			<div class="panel" style="margin-top: 15px;">
-			
-				<!-- ***************** SELECTED RESULTS ***************-->
-			    <h5>Target List</h5>
-			
-			    <ul class="side-nav" ng-repeat="sel in selected" style="line-height:1; padding:0;">
-			        <li><a ng-click="rmSelected($index);">{[{sel.Name_s}]}</a></li>
-			    </ul>
-				<button ng-click="insertSFDC()">Create Campaign</button>
-			</div>
-		</aside>
+		</div>
+		
+		
 	</div>
 
  <!--
@@ -248,7 +228,11 @@
 		    } 
 		  }).filter('sfnametolabel', function() {
 		    return function(input) {
-		      return input.replace ('__c', '').replace(/_/g, ' ');
+		    	try {
+		      	return input.replace ('__c', '').replace(/_/g, ' ');
+		      } catch (e) {
+		      	return 'NO VALUE*';
+		      }
 		    } 
 		  });
    		
@@ -259,7 +243,7 @@
    			$scope.selected = [];
    			
    			$scope.addFilter = function(rec1) {
-   				console.log ('addFilter ' + rec1);
+   				console.log ('addFilter ' + JSON.stringify(rec1));
    				$scope.setfilters.push(rec1);
    			}
     		$scope.rmFilter = function(idx) {
@@ -336,11 +320,18 @@
 
 
 			// Paste the signed request string into a JavaScript object for easy access.
+			
+			console.log ('got from handlebar template : {{title}}');
+			console.log ('got from handlebar template : ' + '{{{signedreq}}}');
+				
 			try {
-				var sr = JSON.parse('{{{ signedreq }}}');
+				
+				var sr = JSON.parse('{{{signedreq}}}');
+				console.log ('got from handlebar template : ' + sr);
+				
 				// Reference the Chatter user's URL from Context.Links object.
 				var queryContactsUrl = sr.context.links.queryUrl + '?q=SELECT+id,name,title,email,phone,MailingStreet,MailingCity,Codes__c,MailingPostalCode,MailingState+from+Contact';
-				console.log (JSON.stringify(sr));
+				
 				$scope.instanceUrl = sr.client.instanceUrl;
 				$scope.getSFDCAccs = function() {
 					// Make an XHR call back to salesforce through the supplied browser proxy. 
