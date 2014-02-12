@@ -7,9 +7,10 @@
 
   
 	<link rel="stylesheet" href="foundation-5.0.3/css/foundation.css">
-	<script src="foundation-5.0.3/js/vendor/custom.modernizr.js"></script>
+	<script src="foundation-5.0.3/js/vendor/modernizr.js"></script>
 
 	<script type="text/javascript" src="https://emea.salesforce.com/canvas/sdk/js/29.0/canvas-all.js"></script>
+	
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular-resource.js"></script>
 
@@ -20,11 +21,12 @@
 	
 <body ng-controller="searchCtrl" class="body">
 
+		
 	<!-- HEADER NAV -->
 	<div class="row">
 	    <div class="panel large-12 columns" >
 	      	<div class="small-9 columns">
-	      		<h3>Product Workbench</h3>
+	      		<h5>{[{contact.Name}]}</h5>
 	        </div>
 	        <div class="small-3 columns">
 	        	<a href="http://localhost:8983/solr/#/collection1"><img src="http://lucene.apache.org/images/solr.png" style="height:50px"/></a>
@@ -37,13 +39,22 @@
 		<!-- LEFT THIRD -->
 	    <div class="large-3 columns ">
 	      <div class="panel">
-	      	<h5>Pay As you Go</h5>
-	        <a href="#"><img src="/images/sim-card.jpg" /></a>
- 
+	      	<h5>Order</h5>
+	     <!--   <a href="#"><img src="/images/sim-card.jpg" /></a>
+ 			-->
           <ul class="side-nav" ng-repeat="sel in selected" style="line-height:1; padding:0; margin-top: 5px;">
-		        <li><a ng-click="rmSelected($index);">{[{sel.Name}]}</a></li>
-			    </ul>
-					<button ng-click="insertSFDC()" style="width: 100%; margin-top: 5px;">Configure</button>
+		        <li>
+		        	<div class="row collapse">
+				        <div class="small-9 columns">
+			        	<a ng-click="rmSelected($index);">{[{sel.Name}]}</a>
+			        	</div>
+			        	<div class="small-3 columns">
+			        	<input style="float: right; " type="text"></input>
+			        	</div>
+		        	</div>
+		        </li>
+			</ul>
+			<button ng-click="insertSFDC()" style="width: 100%; margin-top: 5px;">Place Order</button>
 
 	      </div>
 	      
@@ -78,7 +89,10 @@
 				</div>
 			</div>
 
-
+			<div id="descModal" class="reveal-modal" data-reveal>
+				<h2>Model</h2>
+			</div>
+			
 			<!-- ***************** DATA RESULTS ***************-->
 
 			<div class="row" ng-repeat="o1 in data.res">
@@ -95,8 +109,10 @@
 		          </ul>
 		          
 		          <ul class="inline-list" style="margin-bottom: 0px;">
-		            <li><a class="tiny button" ng-click="addRecord(o1)">Add</a></li>
-		            <li><a class="tiny button" ng-click="addRecord(o1)">Configure</a></li>
+		            <li><a class="tiny button" ng-click="addRecord(o1)">add</a></li>
+		            <li><a class="tiny button">configure</a></li>
+		            <li><a href="#" class="tiny button" onclick="$('#descModal').foundation('reveal', 'open', {url: '{[{instanceUrl}]}/apex/ProductRichPage', data: {id: '{[{o1.id}]}'}});" >more...</a></li>
+		            <!--  data-reveal-ajax="true" href="{[{instanceUrl}]}/apex/ProductRichPage?id={[{o1.id}]}" -->
 		          </ul>
 		        </div>
 		        <hr tyle="margin-top: 0px;"/>
@@ -320,19 +336,34 @@
 
 
 			// Paste the signed request string into a JavaScript object for easy access.
-			
 			console.log ('got from handlebar template : {{title}}');
 			console.log ('got from handlebar template : ' + '{{{signedreq}}}');
 				
 			try {
 				
 				var sr = JSON.parse('{{{signedreq}}}');
-				console.log ('got from handlebar template : ' + sr);
+				// set instanceUrl for links to salesforce objects
+				$scope.instanceUrl = sr.client.instanceUrl;
 				
+				// lookup the client the order is for
+				var clientid = sr.context.environment.parameters.id;
+				var client_url = sr.context.links.sobjectUrl + 'Contact/' + clientid + '/';
+				Sfdc.canvas.client.ajax(
+						client_url, 
+					    {client : sr.client,
+					    success : function(data){
+						    // Make sure the status code is OK.
+						    $scope.$apply(function(){
+							    console.log ("response  "   + data.payload.Name);
+							    $scope.contact = data.payload;
+							    });
+						  }});
+				
+				
+				/***********************
 				// Reference the Chatter user's URL from Context.Links object.
 				var queryContactsUrl = sr.context.links.queryUrl + '?q=SELECT+id,name,title,email,phone,MailingStreet,MailingCity,Codes__c,MailingPostalCode,MailingState+from+Contact';
 				
-				$scope.instanceUrl = sr.client.instanceUrl;
 				$scope.getSFDCAccs = function() {
 					// Make an XHR call back to salesforce through the supplied browser proxy. 
 					console.log('call salesforce: ' + queryContactsUrl);
@@ -380,7 +411,11 @@
 					    }
 					}});
 				}
-			} catch (e) { console.log ('no Signed Request'); }
+				*********************************************************************/
+			} catch (e) { 
+				console.log ('no Signed Request'); 
+				$scope.instanceUrl = "https://eu2.salesforce.com";
+			}
 			$scope.search ({txt: '', rows: 0});
 		}
 	</script>
