@@ -1,25 +1,24 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" old-ng-app="ngResource" ng-app="app"> 
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Foundation 4</title>
-
-  
-	<link rel="stylesheet" href="foundation-5.0.3/css/foundation.css">
-	<script src="foundation-5.0.3/js/vendor/modernizr.js"></script>
+    <link rel="stylesheet" href="lib/foundation/css/foundation.css" />
+    <script src="lib/foundation/js/vendor/modernizr.js"></script>
 
 	<script type="text/javascript" src="https://emea.salesforce.com/canvas/sdk/js/29.0/canvas-all.js"></script>
 	
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular-resource.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-resource.js"></script>
 
-	
+	<script src="js/productsearchctrl.js"></script>
 </head>
 
 
 	
-<body ng-controller="searchCtrl" class="body">
+<body  class="body">
 
 		
 	<!-- HEADER NAV -->
@@ -37,11 +36,11 @@
 	<div class="row">
 	
 		<!-- LEFT THIRD -->
-	    <div class="large-3 columns ">
+	    <div class="large-3 small-3 columns ">
 	      <div class="panel">
 	      	<h5>Order</h5>
-	     <!--   <a href="#"><img src="/images/sim-card.jpg" /></a>
- 			-->
+	       <a href="#"><img src="/img/sim-card.jpg" /></a>
+ 			
           <ul class="side-nav" ng-repeat="sel in selected" style="line-height:1; padding:0; margin-top: 5px;">
 		        <li>
 		        	<div class="row collapse">
@@ -60,7 +59,7 @@
 	      
 	      <div class="panel">
 	      	<h5>Contract</h5>
-	        <a href="#"><img src="/images/contract.jpg" /></a>
+	        <a href="#"><img src="/img/contract.jpg" /></a>
  
 
 					<button ng-click="insertSFDC()" style="width: 100%; margin-top: 5px;">Configure</button>
@@ -68,87 +67,23 @@
 	      </div>	      
 	    </div>
 
+	    <div class="large-9 small-9 columns " >
+		    <dl class="tabs" >
+			  <dd class="active"><a href="#/">Products</a></dd>
+			  <dd><a href="#/packages">Packages</a></dd>
+			  <dd><a href="#panel2-3">Offers</a></dd>
+			  <dd><a href="#panel2-4">Account</a></dd>
+			</dl>
+			<div class="tabs-content" ng-view>
+			 	 
+			</div>
+	    </div>
 	    
-	    <!-- CENTER -->
-	    <div class="large-6 columns">
-	
-			
-			<!-- ***************** SEARCH ENTRY ROW ***************** -->
-			<div class="row" >
-				<div class="large-12 columns">
-					<div class="row collapse">
-				        <label>Product Search</label>
-				        <div class="small-9 columns">
-				          <input type="text" ng-model="searchparam.txt" placeholder="Search for..." />
-				        </div>
-				        <div class="small-3 columns">
-				        <!--  <span class="postfix">.com</span> -->
-				          <button class="button postfix" ng-click="search(searchparam)">Search</button>
-				        </div>
-				    </div>
-				</div>
-			</div>
-
-			<div id="descModal" class="reveal-modal" data-reveal>
-				<h2>Model</h2>
-			</div>
-			
-			<!-- ***************** DATA RESULTS ***************-->
-
-			<div class="row" ng-repeat="o1 in data.res">
-		        <div class="large-2 columns small-3"><img ng-src="https://eu2.salesforce.com/sfc/servlet.shepherd/version/download/{[{o1.ThumbImageId__c}]}"></div>
-		        <div class="large-10 columns">
-		          <p><strong>{[{o1.Type__c}]}: <a target="_top" href="{[{instanceUrl}]}/{[{o1.id}]}">{[{o1.Name}]}</a></strong>
-		          Colour: {[{o1.Colour__c}]}, Internal Memory: {[{o1.Memory_Gb__c}]}, Operating System: {[{o1.Operating_system__c}]}, Camera MP: {[{o1.Camera__c}]}, SIM Type: {[{o1.SIM_Size__c}]} </p>
-
-		          
-		          <ul class="inline-list" style="margin-left: 0px;">
-		          	<li ng-repeat="skill in o1.Available_Tariffs__c" style="margin: 0px 2px 2px 0px;">
-		          		<span class="radius success label" >{[{skill}]}</span>
-		          	</li>
-		          </ul>
-		          
-		          <ul class="inline-list" style="margin-bottom: 0px;">
-		            <li><a class="tiny button" ng-click="addRecord(o1)">add</a></li>
-		            <li><a class="tiny button">configure</a></li>
-		            <li><a href="#" class="tiny button" onclick="$('#descModal').foundation('reveal', 'open', {url: '{[{instanceUrl}]}/apex/ProductRichPage', data: {id: '{[{o1.id}]}'}});" >more...</a></li>
-		            <!--  data-reveal-ajax="true" href="{[{instanceUrl}]}/apex/ProductRichPage?id={[{o1.id}]}" -->
-		          </ul>
-		        </div>
-		        <hr tyle="margin-top: 0px;"/>
-		    </div>
-
-		</div>
-
-
-
-		<!-- ***************** RIGHT COLUMN ***************-->
-		<div class="large-3 columns">
-
-
-			<div class="panel" style="margin-top: 15px;">
-
-				<h6><strong>Filters</strong> ({[{data.totalrecords}]}) results</p></h6>
-				<div ng-repeat="filt in setfilters">
-					<a class="label round alert" style="margin: 2px;" ng-click="rmFilter($index);  search(searchparam);">{[{filt.field | sfnametolabel }]}: {[{filt.val | sfnametolabel}]}</a>
-				</div>
-
-				<!-- ***************** FACET RESULTS ***************-->
-		        <span ng-repeat="(key1, fr) in data.facetresults">
-			      <p style="margin-bottom:0;">{[{key1 | sfnametolabel }]}</p>
-			        <style> .hide { display: none; }</style>
-			        <ul class="side-nav"  style="line-height:1; padding:0;">
-				        <li ng-repeat="fieldfr in fr" class="ng-class-even: 'hide'" ><a ng-click="addFilter( {field: key1, val: fieldfr}); search(searchparam);">{[{fieldfr | sfnametolabel }]} ({[{fr[$index+1]}]})</a></li>
-				    </ul>
-				    <hr/>
-				</span>
-			</div>
-		</div>
 		
 		
 	</div>
 
- <!--
+ 	<!--
 	<div class="row">
 		<div class="large-8 columns">
 
@@ -234,194 +169,124 @@
    		angular.module('app', ['ngResource']);
    		*/
    		
-   		angular.module('app', ['ngResource']).config(function($interpolateProvider){
-	        $interpolateProvider.startSymbol('{[{').endSymbol('}]}');
-	    }).filter('split', function() {
-		    return function(input, delimiter) {
-		      var delimiter = delimiter || ',';
-		
-		      return input.split(delimiter);
-		    } 
-		  }).filter('sfnametolabel', function() {
-		    return function(input) {
-		    	try {
-		      	return input.replace ('__c', '').replace(/_/g, ' ');
-		      } catch (e) {
-		      	return 'NO VALUE*';
-		      }
-		    } 
-		  });
-   		
-   		function searchCtrl( $resource, $scope) {
-   			var data = {};
-   			$scope.setfilters = [];
-   			$scope.data = data;
-   			$scope.selected = [];
-   			
-   			$scope.addFilter = function(rec1) {
-   				console.log ('addFilter ' + JSON.stringify(rec1));
-   				$scope.setfilters.push(rec1);
-   			}
-    		$scope.rmFilter = function(idx) {
-   				console.log ('rmFilter ' + idx);  			
-   				$scope.setfilters.splice( $scope.setfilters[idx] ,1);
-   			}
-   			
-   			$scope.addRecord = function(rec1) {
-   				console.log ('addRecord ' + JSON.stringify(rec1)); 
-   				$scope.selected.push(rec1);
-   			}
-   			$scope.rmSelected = function(idx) {
-   				console.log ('rmSelected ' + idx);  			
-   				$scope.selected.splice( $scope.selected[idx] ,1);
-   			}
-   			
-   			/* Initialisation */
-	   		$scope.Search = $resource('/product/:accId', {accId:'@id'}, 
-	   			{'saveall':  {method:'POST', isArray:true}});
-			$scope.showerror = false; 
-
-			/* data/action bindings */
-			$scope.search = function (s) {
-				if (s == null) s = {};
-				if (s.txt == null || s.txt == '') s.txt = "*";
-				if (s.rows == null) s.rows = 50;
-				//if (f != null) s.filters = JSON.stringify(f);
-				s.filters = JSON.stringify($scope.setfilters);
-				console.log ('searching for  ' + JSON.stringify(s));
-				var res = $scope.Search.query(s, 
-					/*Success */
-					function (value, responseHeaders){
-
-						console.log('Response docs ' + JSON.stringify(value[1]));
-						console.log('Response facets ' + JSON.stringify(value[2]) );
-
-						// Results
-						if (value[1] != null) {
-							data.res = value[1].docs;
-						}
-
-						// Facet
-						console.log('found docs ' + value[1].numFound + ' documents');
-						data.totalrecords = value[1].numFound
-						if (value[2] != null) {
-							data.facetresults = value[2].facet_fields;
-						}
-
-
-					}, 
-					/* Error */
-					function (httpResponse) {
-					 	$scope.errorStr = 'Error ' + JSON.stringify( httpResponse);
-					 	$scope.showerror = true;
-					 	alert ($scope.errorStr);
-					 } );
-			}
-
-
-			/* data/action bindings */
-			$scope.add = function (s) {
-				$scope.Search.saveall(s, 
-								function (value, responseHeaders){
-							console.log ('Add success : ' + JSON.stringify( value)) ;
-
-						}, 
-									  function (httpResponse) {
-						 	$scope.errorStr = 'Error ' + JSON.stringify( httpResponse);
-						 	$scope.showerror = true;
-						 	alert ($scope.errorStr);
-					 	} );
-
-			}
-
-
-			// Paste the signed request string into a JavaScript object for easy access.
-			console.log ('got from handlebar template : {{title}}');
-			console.log ('got from handlebar template : ' + '{{{signedreq}}}');
-				
-			try {
-				
-				var sr = JSON.parse('{{{signedreq}}}');
-				// set instanceUrl for links to salesforce objects
-				$scope.instanceUrl = sr.client.instanceUrl;
-				
-				// lookup the client the order is for
-				var clientid = sr.context.environment.parameters.id;
-				var client_url = sr.context.links.sobjectUrl + 'Contact/' + clientid + '/';
-				Sfdc.canvas.client.ajax(
+   		angular.module('app', ['ngResource', 'ngRoute']).config(function($interpolateProvider) {
+	        	$interpolateProvider.startSymbol('{[{').endSymbol('}]}');
+	        }).config(['$routeProvider', function($routeProvider){
+		        $routeProvider.
+			      when('/', {
+			        templateUrl: 'partials/productsearch.html',
+			   		controller: 'searchCtrl'
+			      }).
+			      when('/packages', {
+			        templateUrl: 'partials/packages.html'
+			      }).
+			      otherwise({
+			        redirectTo: '/phones'
+			      });
+	    	}]).filter('split', function() {
+			    return function(input, delimiter) {
+			      var delimiter = delimiter || ',';
+			
+			      return input.split(delimiter);
+			    } 
+			  }).filter('sfnametolabel', function() {
+			    return function(input) {
+			    	try {
+			      	return input.replace ('__c', '').replace(/_/g, ' ');
+			      } catch (e) {
+			      	return 'NO VALUE*';
+			      }
+			    } 
+			  }).run(function($rootScope, $location) {
+	   		
+				// Paste the signed request string into a JavaScript object for easy access.
+				console.log ('got from handlebar template : {{title}}');
+				console.log ('got from handlebar template : ' + '{{{signedreq}}}');
+								
+				try {
+								
+					var sr = JSON.parse('{{{signedreq}}}');
+					// set instanceUrl for links to salesforce objects
+					$rootScope.instanceUrl = sr.client.instanceUrl;
+					$rootScope.access_token = sr.client.oauthToken;
+					$rootScope.targetOrigin = sr.client.targetOrigin;
+	
+					// lookup the client the order is for
+					var clientid = sr.context.environment.parameters.id;
+					var client_url = sr.context.links.sobjectUrl + 'Contact/' + clientid + '/';
+					Sfdc.canvas.client.ajax(
 						client_url, 
 					    {client : sr.client,
 					    success : function(data){
 						    // Make sure the status code is OK.
-						    $scope.$apply(function(){
+						    $rootScope.$apply(function(){
 							    console.log ("response  "   + data.payload.Name);
-							    $scope.contact = data.payload;
+							    $rootScope.contact = data.payload;
 							    });
 						  }});
 				
 				
 				/***********************
-				// Reference the Chatter user's URL from Context.Links object.
-				var queryContactsUrl = sr.context.links.queryUrl + '?q=SELECT+id,name,title,email,phone,MailingStreet,MailingCity,Codes__c,MailingPostalCode,MailingState+from+Contact';
-				
-				$scope.getSFDCAccs = function() {
-					// Make an XHR call back to salesforce through the supplied browser proxy. 
-					console.log('call salesforce: ' + queryContactsUrl);
-					Sfdc.canvas.client.ajax(queryContactsUrl, 
-					    {client : sr.client,
-					    success : function(data){
-					    // Make sure the status code is OK.
-					    console.log ("response  "   + JSON.stringify(data));
-					    if (data.status === 200) {
+// Reference the Chatter user's URL from Context.Links object.
+var queryContactsUrl = sr.context.links.queryUrl + '?q=SELECT+id,name,title,email,phone,MailingStreet,MailingCity,Codes__c,MailingPostalCode,MailingState+from+Contact';
 
-					        console.log ("Updating  "  + data.payload.totalSize + 
-					        " Contacts into Solr"); // Returned 2 users
+$scope.getSFDCAccs = function() {
+	// Make an XHR call back to salesforce through the supplied browser proxy. 
+	console.log('call salesforce: ' + queryContactsUrl);
+	Sfdc.canvas.client.ajax(queryContactsUrl, 
+	    {client : sr.client,
+	    success : function(data){
+	    // Make sure the status code is OK.
+	    console.log ("response  "   + JSON.stringify(data));
+	    if (data.status === 200) {
 
-					        var pushtosolr = new Array();
-					        for (var i = 0; i < data.payload.totalSize; i++) {
-					        	var sfdcobj = data.payload.records[i];
-					        	console.log (JSON.stringify (sfdcobj));
-					        	var code_json = [];
-					        	//if (sfdcobj.Codes__c != null) {
-					        	//	code_json = sfdcobj.Codes__c.split(',');
-					        	//}
-					        	if (sfdcobj.Codes__c != null) {
-					        		sfdcobj.Codes__c.split(',').forEach(function(c, i) {
-					        			var v1 = c.trim();
-					        			if (v1 != '') code_json.push (v1);
-					        		});
-					        	}
+	        console.log ("Updating  "  + data.payload.totalSize + 
+	        " Contacts into Solr"); // Returned 2 users
+
+	        var pushtosolr = new Array();
+	        for (var i = 0; i < data.payload.totalSize; i++) {
+	        	var sfdcobj = data.payload.records[i];
+	        	console.log (JSON.stringify (sfdcobj));
+	        	var code_json = [];
+	        	//if (sfdcobj.Codes__c != null) {
+	        	//	code_json = sfdcobj.Codes__c.split(',');
+	        	//}
+	        	if (sfdcobj.Codes__c != null) {
+	        		sfdcobj.Codes__c.split(',').forEach(function(c, i) {
+	        			var v1 = c.trim();
+	        			if (v1 != '') code_json.push (v1);
+	        		});
+	        	}
 
 
-					        	var solrobj = {
-						        	'id': sfdcobj.Id,
-						        	'Name_s' : sfdcobj.Name,
-						        	'Title_s': sfdcobj.Title,
-						        	'Codes_ss' : code_json,
-						        	'CV_Details_s' : sfdcobj.CV_Details__c,
-						        	'MailingStreet_s': sfdcobj.MailingStreet,
-						        	'MailingCity_s': sfdcobj.MailingCity,
-						        	'MailingState_s': sfdcobj.MailingState,
-						        	'MailingPostalCode_s': sfdcobj.MailingPostalCode,
-						        	'Phone_s': sfdcobj.Phone,
-						        	'Email_s': sfdcobj.Email};
-				        		pushtosolr.push (solrobj);
-					        }
-					        $scope.add(pushtosolr);
-					    }
-					}});
-				}
-				*********************************************************************/
-			} catch (e) { 
-				console.log ('no Signed Request'); 
-				$scope.instanceUrl = "https://eu2.salesforce.com";
-			}
-			$scope.search ({txt: '', rows: 0});
-		}
+	        	var solrobj = {
+		        	'id': sfdcobj.Id,
+		        	'Name_s' : sfdcobj.Name,
+		        	'Title_s': sfdcobj.Title,
+		        	'Codes_ss' : code_json,
+		        	'CV_Details_s' : sfdcobj.CV_Details__c,
+		        	'MailingStreet_s': sfdcobj.MailingStreet,
+		        	'MailingCity_s': sfdcobj.MailingCity,
+		        	'MailingState_s': sfdcobj.MailingState,
+		        	'MailingPostalCode_s': sfdcobj.MailingPostalCode,
+		        	'Phone_s': sfdcobj.Phone,
+		        	'Email_s': sfdcobj.Email};
+        		pushtosolr.push (solrobj);
+	        }
+	        $scope.add(pushtosolr);
+	    }
+	}});
+}
+*********************************************************************/
+} catch (e) { 
+	console.log ('no Signed Request'); 
+	$rootScope.instanceUrl = "https://eu2.salesforce.com";
+}
+});
 	</script>
 
-	<script src="foundation-5.0.3/js/vendor/jquery.js"></script>
-    <script src="foundation-5.0.3/js/foundation.min.js"></script>
+    <script src="lib/foundation/js/vendor/jquery.js"></script>
+    <script src="lib/foundation/js/foundation.min.js"></script>
     <script>
       $(document).foundation();
     </script>
