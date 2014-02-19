@@ -67,14 +67,14 @@
 	      </div>	      
 	    </div>
 
-	    <div class="large-9 small-9 columns " >
+	    <div class="large-9 small-9 columns " ng-controller="TabNavCntrl">
 		    <dl class="tabs" >
-			  <dd class="active"><a href="#/">Products</a></dd>
-			  <dd><a href="#/packages">Packages</a></dd>
+			  <dd ng-class="{ active: isActive('/')}"><a href="#/">Product Search</a></dd>
+			  <dd ng-class="{ active: isActive('/packages')}"><a href="#/packages">Packages</a></dd>
 			  <dd><a href="#panel2-3">Offers</a></dd>
 			  <dd><a href="#panel2-4">Account</a></dd>
 			</dl>
-			<div class="tabs-content" ng-view>
+			<div class="tabs-content" style="margin-top: 10px;" ng-view>
 			 	 
 			</div>
 	    </div>
@@ -224,7 +224,22 @@
 							    $rootScope.contact = data.payload;
 							    });
 						  }});
+				} catch (e) { 
+					console.log ('no Signed Request'); 
+					$rootScope.instanceUrl = "https://eu2.salesforce.com";
+				}
 				
+			});
+			
+			function TabNavCntrl ($scope,$location) {
+			        $scope.isActive = function (viewLocation) { 
+				        return viewLocation === $location.path();
+				    };
+			        $scope.changeView = function(view){
+			        	$('.absolute').toggleClass('showsidebar');
+			            $location.path(view); // path not hash
+			        }
+			    }
 				
 				/***********************
 // Reference the Chatter user's URL from Context.Links object.
@@ -278,11 +293,7 @@ $scope.getSFDCAccs = function() {
 	}});
 }
 *********************************************************************/
-} catch (e) { 
-	console.log ('no Signed Request'); 
-	$rootScope.instanceUrl = "https://eu2.salesforce.com";
-}
-});
+
 	</script>
 
     <script src="lib/foundation/js/vendor/jquery.js"></script>
