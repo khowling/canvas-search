@@ -1,4 +1,8 @@
 var searchCtrl =  function ( $resource, $scope, $rootScope, $location) {
+	
+	$scope.isSmall = window.matchMedia("(max-width: 40em)").matches;
+
+	
 	var data = {};
 	$scope.setfilters = [];
 	$scope.data = data;
@@ -65,7 +69,8 @@ var searchCtrl =  function ( $resource, $scope, $rootScope, $location) {
 		//if (f != null) s.filters = JSON.stringify(f);
 		s.filters = JSON.stringify($scope.setfilters);
 		console.log ('searching for  ' + JSON.stringify(s));
-		$location.search('s', JSON.stringify(s));
+		
+		//$location.search('s', JSON.stringify(s));
 		
 		var res = $scope.Search.query(s, 
 			/*Success */
@@ -116,13 +121,8 @@ var searchCtrl =  function ( $resource, $scope, $rootScope, $location) {
 
 	}
 
-	var initials = $location.search().s;
-	console.log('initials ' + JSON.stringify(initials));
-	if (initials) {
-		initials = JSON.parse(initials);
-	} else {
-		initials = {txt: '', rows: 0};
-	}
+	var initials = {txt: '', rows: 0};
+
 	console.log('initials ' + JSON.stringify(initials));
 	$scope.search (initials);
 }

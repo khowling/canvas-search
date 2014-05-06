@@ -1,17 +1,23 @@
 <!DOCTYPE html>
+<!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
 <html class="no-js" lang="en" old-ng-app="ngResource" ng-app="app"> 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Foundation 4</title>
     <link rel="stylesheet" href="lib/foundation/css/foundation.css" />
+    
+    <link rel="stylesheet" href="css/main.css" />
+    
+    
     <script src="lib/foundation/js/vendor/modernizr.js"></script>
 
-	<script type="text/javascript" src="https://emea.salesforce.com/canvas/sdk/js/29.0/canvas-all.js"></script>
+	<script src="https://emea.salesforce.com/canvas/sdk/js/29.0/canvas-all.js" type="text/javascript"></script>
 	
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-resource.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js" type="text/javascript" ></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.js" type="text/javascript"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-animate.js" type="text/javascript"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-resource.js" type="text/javascript"></script>
 
 	<script src="js/productsearchctrl.js"></script>
 </head>
@@ -22,23 +28,27 @@
 
 		
 	<!-- HEADER NAV -->
-	<div class="row">
-	    <div class="panel large-12 columns" >
-	      	<div class="small-9 columns">
-	      		<h5>{[{contact.Name}]}</h5>
-	        </div>
-	        <div class="small-3 columns">
-	        	<a href="http://localhost:8983/solr/#/collection1"><img src="http://lucene.apache.org/images/solr.png" style="height:50px"/></a>
-	        </div>
-	      </div>
-	</div>
+	<nav class="top-bar" data-topbar="">
+	
+		<section class="top-bar-section">
+		    <ul class="left">
+		      <li class="menu-icon">
+		        <a href="#">Menu</a>
+		      </li>
+		
+		    </ul>
+		
+		  </section>
+	  </nav><!-- End Navigation -->
+
   
 	<div class="row">
 	
 		<!-- LEFT THIRD -->
-	    <div class="large-3 small-3 columns ">
+	    <div class="hide-for-small large-3 medium-4 column">
+	    	<div class="">
 	      <div class="panel">
-	      	<h5>Order</h5>
+	      	<h5>Basket</h5>
 	       <a href="#"><img src="/img/sim-card.jpg" /></a>
  			
           <ul class="side-nav" ng-repeat="sel in selected" style="line-height:1; padding:0; margin-top: 5px;">
@@ -64,18 +74,20 @@
 
 					<button ng-click="insertSFDC()" style="width: 100%; margin-top: 5px;">Configure</button>
 
+	      </div>
 	      </div>	      
 	    </div>
 
-	    <div class="large-9 small-9 columns " ng-controller="TabNavCntrl">
+	    <div class="large-9 medium-8 column " ng-controller="TabNavCntrl">
 		    <dl class="tabs" >
 			  <dd ng-class="{ active: isActive('/')}"><a href="#/">Product Search</a></dd>
-			  <dd ng-class="{ active: isActive('/packages')}"><a href="#/packages">Packages</a></dd>
-			  <dd><a href="#panel2-3">Offers</a></dd>
-			  <dd><a href="#panel2-4">Account</a></dd>
+			  <dd ng-class="{ active: isActive('/packages')}"><a href="#/packages">Hot Offers</a></dd>
+			  <dd><a href="#panel2-3">Promotions</a></dd>
+			  <dd><a href="#panel2-4">Upgrade Options</a></dd>
 			</dl>
-			<div class="tabs-content" style="margin-top: 10px;" ng-view>
-			 	 
+			<div class="view-animate-container">
+				<div  ng-view class="view-animate">
+			</div> 	 
 			</div>
 	    </div>
 	    
@@ -169,7 +181,7 @@
    		angular.module('app', ['ngResource']);
    		*/
    		
-   		angular.module('app', ['ngResource', 'ngRoute']).config(function($interpolateProvider) {
+   		angular.module('app', ['ngResource', 'ngRoute', 'ngAnimate']).config(function($interpolateProvider) {
 	        	$interpolateProvider.startSymbol('{[{').endSymbol('}]}');
 	        }).config(['$routeProvider', function($routeProvider){
 		        $routeProvider.
